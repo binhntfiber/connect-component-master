@@ -27,12 +27,6 @@ export default {
   name: "Index",
   status: "deprecated",
   release: "1.0.0",
-  metaInfo: {
-    title: "Vue Design System",
-    htmlAttrs: {
-      lang: "en",
-    },
-  },
   props: {
     /**
      * The html element name used for the component.

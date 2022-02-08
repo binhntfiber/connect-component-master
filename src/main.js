@@ -4,14 +4,12 @@ import Vue from "vue"
 import App from "@/App"
 import router from "@/router"
 import WebFontLoader from "@/utils/webFontLoader" // eslint-disable-line no-unused-vars
-import Meta from "vue-meta"
 import VModal from "vue-js-modal"
 
 // Vue Design System: Auto importing components globally
 import DesignSystem from "@/system"
 
 Vue.use(DesignSystem)
-Vue.use(Meta)
 Vue.use(VModal, { componentName: "modal" })
 
 Vue.config.productionTip = false
