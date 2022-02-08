@@ -1,18 +1,29 @@
 <template>
-  <modal width="500px" height="auto" name="connectModal" scrollable adaptive>
-    <div
-      v-for="connector in availableConnectors"
-      :key="connector.type"
-      class="connector"
-      @click="connectToWallet(connector.type)"
-    >
-      <div class="connector__img">
-        <img :src="connector.icon" alt="metamask" />
+  <transition name="modal" v-if="showModal">
+    <div class="modal-mask" @click.stop="showModal = false">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <div class="modal-body">
+            <div
+              v-for="connector in availableConnectors"
+              :key="connector.type"
+              class="connector"
+              @click="connectToWallet(connector.type)"
+            >
+              <div class="connector__img">
+                <img :src="connector.icon" alt="metamask" />
+              </div>
+              <div class="connector__name">{{ connector.name }}</div>
+              <div class="connector__desc">{{ connector.description }}</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="connector__name">{{ connector.name }}</div>
-      <div class="connector__desc">{{ connector.description }}</div>
     </div>
-  </modal>
+  </transition>
+  <!-- <modal width="500px" height="auto" name="connectModal" scrollable adaptive>
+    
+  </modal> -->
 </template>
 
 <script>
@@ -65,19 +76,19 @@ export default {
       type: Number,
       default: CHAIN_ID.FANTOM_OPERA,
     },
-    show: {
+    value: {
       type: Boolean,
       default: false,
     },
   },
-  watch: {
-    show(newVal, oldVal) {
-      if (newVal) {
-        this.$modal.show("connectModal")
-      }
-      if (!newVal && oldVal) {
-        this.$modal.hide("connectModal")
-      }
+  computed: {
+    showModal: {
+      get() {
+        return this.value
+      },
+      set(val) {
+        this.$emit("input", val)
+      },
     },
   },
   data() {
@@ -107,7 +118,7 @@ export default {
 
         this.$emit("error", error)
       } finally {
-        this.$modal.hide("connectModal")
+        this.showModal = false
       }
     },
     async connectMetamask(chain) {
@@ -179,9 +190,6 @@ export default {
 </script>
 
 <style lang="scss">
-.vm--modal {
-  border-radius: 16px !important;
-}
 .connector {
   padding: 24px 16px;
   cursor: pointer;
@@ -205,5 +213,84 @@ export default {
   font-size: 16px;
   margin: 0.333em 0px;
   color: rgb(169, 169, 188);
+ 
+}
+
+@media screen and (max-width: 768px) {
+  .connector__name {
+    font-size: 5vw;
+  }
+  .connector__desc {
+    font-size: 4vw;
+  }
+  .connector__img img {
+    width: 8.5vw;
+    height: 8.5vw;
+  }
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  max-width: 500px;
+  max-height: 100%;
+  overflow: auto;
+  margin: 20px auto;
+
+  transition: all 0.3s ease;
+}
+
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+
+.modal-body {
+  margin: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  border-radius: 16px;
+}
+
+.modal-default-button {
+  float: right;
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>

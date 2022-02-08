@@ -13,9 +13,9 @@
   </component> -->
   <div>
     <div>
-      <button @click="$modal.show('connectModal')">Open modal connect</button>
+      <button @click="show = true">Open modal connect</button>
     </div>
-    <ConnectComponent />
+    <ConnectComponent v-model="show" />
   </div>
 </template>
 
@@ -35,6 +35,11 @@ export default {
       type: String,
       default: "div",
     },
+  },
+  data() {
+    return {
+      show: false,
+    }
   },
 }
 </script>
